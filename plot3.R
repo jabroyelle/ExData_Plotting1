@@ -1,0 +1,19 @@
+#################################
+# plot3.R script : create the plot3.png graph
+#################################
+
+# 1) load the first 200 days of data of the input file into "raw.data" : starting in December 2006, stopping Jully 2007
+raw.data = read.csv("household_power_consumption.txt",na.strings = "?",  nrows=200*60*24, sep = ";")
+# 2) extract the 3 days of interest for the study : from 1st Feb to 3td Feb 2007 into "Feb.data"
+Feb.data = raw.data[raw.data$Date =="1/2/2007" | raw.data$Date == "2/2/2007",]
+# 3) add a DT 'date time' column to Feb.data
+Feb.data$DT = strptime (paste (Feb.data$Date,Feb.data$Time),"%d/%m/%Y %H:%M:%S")
+# 4) Open the png file device, create the graph as required and close the png device 
+png ("plot3.png")
+with (Feb.data, {
+  plot(DT, Sub_metering_1, col="black", type="l", xlab="", ylab="Energy sub metering")
+  lines(DT, Sub_metering_2, col="red")
+  lines(DT, Sub_metering_3, col="blue")
+  legend("topright", pch=NA, lty=1, col=c("black","red","blue"), legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+})
+dev.off()
